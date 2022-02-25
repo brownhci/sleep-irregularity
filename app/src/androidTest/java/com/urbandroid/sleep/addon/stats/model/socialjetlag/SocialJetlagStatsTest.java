@@ -87,32 +87,47 @@ public class SocialJetlagStatsTest {
         day1Interval.set(0,720);
         Assert.assertEquals(1.0, stats.calculateSRI(day1Interval, day2Interval), .0001);
 
-        // awake 24 hours
+        // awake 24 hours for day 1, awake 0 for day 2
         BitSet interval3 = new BitSet(1440);
         BitSet interval4 = new BitSet(1440);
         interval3.set(0,1440);
         Assert.assertEquals(0, stats.calculateSRI(interval3, interval4), .0001);
 
-        // awake 0 hours
+        // awake 0 hours across both days
         BitSet interval5 = new BitSet(1440);
         BitSet interval6 = new BitSet(1440);
         Assert.assertEquals(1.0, stats.calculateSRI(interval5, interval6), .0001);
+
+        // awake 24 hours both days
+        BitSet interval7 = new BitSet(1440);
+        BitSet interval8 = new BitSet(1440);
+        interval7.set(0,1440);
+        interval8.set(0,1440);
+        Assert.assertEquals(1.0, stats.calculateSRI(interval7, interval8), .0001);
+
+        //both intervals are the same
+        BitSet interval9 = new BitSet(1440);
+        BitSet interval10 = new BitSet(1440);
+        interval9.set(0, 720);
+        interval10.set(0, 720);
+        Assert.assertEquals(1.0, stats.calculateSRI(interval9, interval10), .0001);
     }
 
     @Test
     public void testCalculateSRI() {
         BitSet day1Interval = new BitSet(1440);
         BitSet day2Interval = new BitSet(1440);
+        BitSet day3Interval = new BitSet(1440);
         day1Interval.set(0,720);
         day2Interval.set(0,720);
+        day3Interval.set(0,1440);
+
         // testing for when the intevals are the same
         SocialJetlagStats  stats = new SocialJetlagStats(cr, false);
         float sameInterval = stats.calculateSRI(day1Interval, day2Interval);
         Assert.assertEquals(1.0, sameInterval, .0001);
 
         // general test, one interval enclosed inside the other
-        BitSet day3Interval = new BitSet(1440);
-        day3Interval.set(0,1440);
         Assert.assertEquals(0.5, stats.calculateSRI(day1Interval, day3Interval), .0001);
         Assert.assertEquals(0.5, stats.calculateSRI(day2Interval, day3Interval), .0001);
 
@@ -140,7 +155,8 @@ public class SocialJetlagStatsTest {
         BitSet interval10 = new BitSet(1440);
         interval9.set(0, 720);
         interval10.set(100, 820);
-        Assert.assertEquals(1.0 - 200.0/1440.0, stats.calculateSRI(interval9, interval10), .000001);
+        double dayDiff = (820 - 720) + (100);
+        Assert.assertEquals(1.0 - dayDiff/1440.0, stats.calculateSRI(interval9, interval10), .000001);
     }
 
     @Test
