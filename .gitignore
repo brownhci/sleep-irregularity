@@ -1,0 +1,6 @@
+.gradle
+.gradle/*
+*.lock
+*.properties
+*.bin
+*.idea
